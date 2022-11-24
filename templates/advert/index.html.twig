@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Advert index{% endblock %}
+{% block title %}Liste des annonces{% endblock %}
 
 {% block body %}
-    <h1>Advert index</h1>
+    <h1>Liste des annonces</h1>
 
     <table class="table">
         <thead>
@@ -41,5 +41,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_advert_new') }}">Create new</a>
+    <a class="btn btn-warning" href="{{ path('app_advert_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
 {% endblock %}

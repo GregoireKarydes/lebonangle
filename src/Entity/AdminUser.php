@@ -1,13 +1,18 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
 use App\Repository\AdminUserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: AdminUserRepository::class)]
-class AdminUser
+class AdminUser implements TimestampableInterface
 {
+    use TimestampableTrait;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

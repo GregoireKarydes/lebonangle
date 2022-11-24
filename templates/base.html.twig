@@ -23,23 +23,23 @@
 		{# NAVBAR #}
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="/advert">
+				<a class="navbar-brand" href="{{ path('app_advert_index')}}">
 					<img src="https://iphonesoft.fr/images/appstore/484115113/leboncoin-icon.png" alt="lebonanglelogo" width="30" height="24" class="d-inline-block align-text-top">
 					LeBonAngle
 				</a>
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav">
                     <li class="nav-item">
-							<a class="btn btn-warning" aria-current="page" href="/advert/new"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+							<a class="btn btn-warning" aria-current="page" href="{{ path('app_advert_new')}}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="/advert">Annonces</a>
+							<a class="nav-link active" aria-current="page" href="{{ path('app_advert_index')}}">Annonces</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/admin/category">Category</a>
+							<a class="nav-link" href="{{ path('app_category_index') }}">Category</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/admin/admin-user">Admin Users</a>
+							<a class="nav-link" href="{{ path('app_admin_user_index') }}">Admin Users</a>
 						</li>
 					</ul>
 				</div>

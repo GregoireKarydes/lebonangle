@@ -4,10 +4,13 @@ namespace App\Entity;
 
 use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
+use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
-class Picture
+class Picture implements TimestampableInterface
 {
+    use TimestampableTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

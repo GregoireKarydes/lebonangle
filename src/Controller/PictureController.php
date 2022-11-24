@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/picture')]
+#[Route('/admin/picture')]
 class PictureController extends AbstractController
 {
     #[Route('/', name: 'app_picture_index', methods: ['GET'])]

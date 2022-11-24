@@ -11,7 +11,6 @@
                 <th>Id</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Password</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,7 +20,6 @@
                 <td>{{ admin_user.id }}</td>
                 <td>{{ admin_user.username }}</td>
                 <td>{{ admin_user.email }}</td>
-                <td>{{ admin_user.password }}</td>
                 <td>
                     <a href="{{ path('app_admin_user_show', {'id': admin_user.id}) }}">show</a>
                     <a href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">edit</a>
@@ -29,7 +27,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucun utilisateur crée pour le moment</td>
             </tr>
         {% endfor %}
         </tbody>

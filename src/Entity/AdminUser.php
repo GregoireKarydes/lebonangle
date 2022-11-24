@@ -7,9 +7,11 @@ use App\Repository\AdminUserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: AdminUserRepository::class)]
-class AdminUser implements TimestampableInterface
+class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableTrait;
     
@@ -67,4 +69,38 @@ class AdminUser implements TimestampableInterface
 
         return $this;
     }
+	/**
+	 * Returns the roles granted to the user.
+	 *
+	 * public function getRoles()
+	 * {
+	 * return ['ROLE_USER'];
+	 * }
+	 *
+	 * Alternatively, the roles might be stored in a ``roles`` property,
+	 * and populated in any number of different ways when the user object
+	 * is created.
+	 * @return array<string>
+	 */
+	public function getRoles(): array {
+        return ['ROLE_ADMIN'];
+	}
+	
+	/**
+	 * Removes sensitive data from the user.
+	 *
+	 * This is important if, at any given point, sensitive information like
+	 * the plain-text password is stored on this object.
+	 * @return mixed
+	 */
+	public function eraseCredentials() {
+	}
+	
+	/**
+	 * Returns the identifier for this user (e.g. its username or email address).
+	 * @return string
+	 */
+	public function getUserIdentifier(): string {
+        return $this->email;
+	}
 }

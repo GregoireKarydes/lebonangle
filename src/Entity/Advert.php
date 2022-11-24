@@ -62,6 +62,9 @@ class Advert implements TimestampableInterface
     #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Picture::class)]
     private Collection $pictures;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $publishedAt = null;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
@@ -182,6 +185,18 @@ class Advert implements TimestampableInterface
                 $picture->setAdvert(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPublishedAt(): ?\DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
+    public function setPublishedAt(?\DateTimeImmutable $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }

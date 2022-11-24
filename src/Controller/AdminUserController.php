@@ -9,10 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin/admin-user')]
-class AdminUserController extends AbstractController
+class AdminUserController extends  AbstractController
 {
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(AdminUserRepository $adminUserRepository): Response
@@ -23,15 +24,20 @@ class AdminUserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AdminUserRepository $adminUserRepository): Response
+    public function new(Request $request, AdminUserRepository $adminUserRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $adminUser = new AdminUser();
         $form = $this->createForm(AdminUserType::class, $adminUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // hash password
+            $hashedPassword = $passwordHasher->hashPassword(
+                $adminUser,
+                $adminUser->getPassword()
+            );
+            $adminUser->setPassword($hashedPassword);
             $adminUserRepository->save($adminUser, true);
-
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -70,6 +76,13 @@ class AdminUserController extends AbstractController
     #[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
     public function delete(Request $request, AdminUser $adminUser, AdminUserRepository $adminUserRepository): Response
     {
+        // CHECK THE NUMBER OF ADMIN CAN'T DELTE IF LESS THAN 2 ADMIN
+        $allAdmins = $adminUserRepository->findAll();
+        if(count($allAdmins)<2)  {
+            $error = "Impossible de supprimer cet admin, vous devez avoir au moins 1 admin";
+            $this->addFlash('error',$error);
+            return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
+        }
         if ($this->isCsrfTokenValid('delete'.$adminUser->getId(), $request->request->get('_token'))) {
             $adminUserRepository->remove($adminUser, true);
         }
@@ -77,3 +90,4 @@ class AdminUserController extends AbstractController
         return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }
+

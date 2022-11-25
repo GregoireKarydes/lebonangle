@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-        {% for category in categories %}
+        {% for category in pager %}
             <tr>
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
@@ -32,4 +32,5 @@
     </table>
 
     <a href="{{ path('app_category_new') }}">Create new</a>
+    {{pagerfanta(pager)}}
 {% endblock %}

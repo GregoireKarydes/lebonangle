@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
-use PagerFanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +22,7 @@ class CategoryController extends AbstractController
         $queryBuilder = $categoryRepository->createQueryBuilder('category')
         ->addOrderBy('category.name', 'ASC');
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
+        $pager->setMaxPerPage(30);
 
         return $this->render('category/index.html.twig', ['pager'=>$pager
         ]);

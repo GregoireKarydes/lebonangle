@@ -16,13 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     #[Route('/', name: 'app_category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
+    public function index(CategoryRepository $categoryRepository, Request $request): Response
     {
+        // TODO:GET THE REQUEST FOR CHANGE PAGE VIDEO3 OF 25/11 14:00
 
         $queryBuilder = $categoryRepository->createQueryBuilder('category')
         ->addOrderBy('category.name', 'ASC');
         $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
         $pager->setMaxPerPage(30);
+        $pager->setCurrentPage($request->get('page', 1));
 
         return $this->render('category/index.html.twig', ['pager'=>$pager
         ]);

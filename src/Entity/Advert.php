@@ -57,7 +57,7 @@ class Advert implements TimestampableInterface
     private ?float $price = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $state = null;
+    private string $state = 'draft';
 
     #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Picture::class)]
     private Collection $pictures;
@@ -152,12 +152,12 @@ class Advert implements TimestampableInterface
         return $this->state;
     }
 
-    public function setState(string $state): self
-    {
-        $this->state = $state;
+    // public function setState(string $state): self
+    // {
+    //     $this->state = $state;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Picture>

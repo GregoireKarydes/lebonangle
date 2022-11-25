@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/admin/admin-user')]
 class AdminUserController extends  AbstractController
@@ -66,12 +67,18 @@ class AdminUserController extends  AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
-    public function delete(Request $request, AdminUser $adminUser, AdminUserRepository $adminUserRepository): Response
+    public function delete(Request $request, AdminUser $adminUser, AdminUserRepository $adminUserRepository, Security $security): Response
     {
         // CHECK THE NUMBER OF ADMIN CAN'T DELTE IF LESS THAN 2 ADMIN
         $allAdmins = $adminUserRepository->findAll();
         if(count($allAdmins)<2)  {
             $error = "Impossible de supprimer cet admin, vous devez avoir au moins 1 admin";
+            $this->addFlash('error',$error);
+            return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if($security->getUser()->getUserIdentifier() === $adminUser->getEmail())  {
+            $error = "Impossible de supprimer votre propre compte";
             $this->addFlash('error',$error);
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
         }

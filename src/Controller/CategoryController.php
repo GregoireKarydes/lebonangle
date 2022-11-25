@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use PagerFanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +18,12 @@ class CategoryController extends AbstractController
     #[Route('/', name: 'app_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+
+        $queryBuilder = $categoryRepository->createQueryBuilder('category')
+        ->addOrderBy('category.name', 'ASC');
+        $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
+
+        return $this->render('category/index.html.twig', ['pager'=>$pager
         ]);
     }
 

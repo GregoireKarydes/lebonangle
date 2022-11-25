@@ -9,8 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin/admin-user')]
 class AdminUserController extends  AbstractController
@@ -24,19 +22,13 @@ class AdminUserController extends  AbstractController
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AdminUserRepository $adminUserRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, AdminUserRepository $adminUserRepository): Response
     {
         $adminUser = new AdminUser();
         $form = $this->createForm(AdminUserType::class, $adminUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // hash password
-            $hashedPassword = $passwordHasher->hashPassword(
-                $adminUser,
-                $adminUser->getPassword()
-            );
-            $adminUser->setPassword($hashedPassword);
             $adminUserRepository->save($adminUser, true);
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
         }

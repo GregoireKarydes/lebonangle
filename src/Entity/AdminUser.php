@@ -9,6 +9,7 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AdminUserRepository::class)]
 class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthenticatedUserInterface
@@ -23,11 +24,26 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
+    #[Assert\Email]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
+
+    #[Assert\Length(min:5)]
+    // #[Assert\NotCompromisedPassword()]
+    private ?string $plainPassword =null;
+
+
+    public function getPlainPassword() : ?string {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(string $plainpassword) : self {
+        $this->plainPassword = $plainpassword;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +77,7 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
     public function getPassword(): ?string
     {
         return $this->password;
+
     }
 
     public function setPassword(string $password): self
@@ -83,6 +100,7 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
 	 * @return array<string>
 	 */
 	public function getRoles(): array {
+
         return ['ROLE_ADMIN'];
 	}
 	
@@ -94,6 +112,7 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
 	 * @return mixed
 	 */
 	public function eraseCredentials() {
+        $this->setPlainPassword('');
 	}
 	
 	/**

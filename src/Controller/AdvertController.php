@@ -6,13 +6,16 @@ use App\Entity\Advert;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 #[Route('/admin/adverts')]
 class AdvertController extends AbstractController
 {
+
     #[Route('/', name: 'app_advert_index', methods: ['GET'])]
     public function index(AdvertRepository $advertRepository): Response
     {
@@ -39,6 +42,25 @@ class AdvertController extends AbstractController
             'advert' => $advert,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/publish/{id}', name: 'app_advert_publish',methods: ['GET', 'POST'])]
+    public function publish(Advert $advert, WorkflowInterface $advertPublishingStateMachine, AdvertRepository $advertRepository) : RedirectResponse {
+        $advertPublishingStateMachine->apply($advert, 'publish');
+        $advertRepository->save($advert, true);
+        return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/unpublish/{id}', name: 'app_advert_unpublish', methods: ['GET', 'POST'])]
+    public function unpublish(Advert $advert, WorkflowInterface $advertPublishingStateMachine,  AdvertRepository $advertRepository) : RedirectResponse {
+        if($advertPublishingStateMachine->can($advert, 'reject')) {
+            $advertPublishingStateMachine->apply($advert, 'reject');
+        }
+        else if($advertPublishingStateMachine->can($advert, 'unpublish')) {
+            $advertPublishingStateMachine->apply($advert, 'unpublish');
+        }
+        $advertRepository->save($advert, true);
+        return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]

@@ -51,7 +51,7 @@ class Category implements TimestampableInterface
      * @return Collection<int, Advert>
      */
     public function getAdverts(): Collection
-    {
+    {  
         return $this->adverts;
     }
 
@@ -75,5 +75,10 @@ class Category implements TimestampableInterface
         }
 
         return $this;
+    }
+
+    public function __toString() : string
+    {
+        return $this->name;
     }
 }

@@ -152,12 +152,12 @@ class Advert implements TimestampableInterface
         return $this->state;
     }
 
-    // public function setState(string $state): self
-    // {
-    //     $this->state = $state;
+    public function setState(string $state): self
+    {
+        $this->state = $state;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
     /**
      * @return Collection<int, Picture>
@@ -199,5 +199,10 @@ class Advert implements TimestampableInterface
         $this->publishedAt = $publishedAt;
 
         return $this;
+    }
+
+    public function __toString() : string
+    {
+        return $this->author . $this->title;
     }
 }

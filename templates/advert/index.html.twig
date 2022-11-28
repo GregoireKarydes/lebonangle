@@ -9,13 +9,14 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Author</th>
+                <th>Titre</th>
+                <th>Contenu</th>
+                <th>Auteur</th>
                 <th>Email</th>
-                <th>Price</th>
-                <th>State</th>
-                <th>actions</th>
+                <th>Prix</th>
+                <th>Category</th>
+                <th>Etat</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -27,10 +28,21 @@
                 <td>{{ advert.author }}</td>
                 <td>{{ advert.email }}</td>
                 <td>{{ advert.price }}</td>
+                <td>{{ advert.category }}</td>
                 <td>{{ advert.state }}</td>
                 <td>
-                    <a href="{{ path('app_advert_show', {'id': advert.id}) }}">show</a>
-                    <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a>
+                    <a href="{{ path('app_advert_show', {'id': advert.id}) }}">Détails</a>
+                    {% if workflow_can(advert,'publish') %}
+                        <a href="{{ path('app_advert_publish', {'id': advert.id}) }}">Publier</a>
+                    {% endif %}
+
+                    {% if workflow_can(advert,'unpublish') %}
+                        <a href="{{ path('app_advert_unpublish', {'id': advert.id}) }}">Dépublier</a>
+                    {% endif %}
+
+                     {% if workflow_can(advert,'reject') %}
+                        <a href="{{ path('app_advert_unpublish', {'id': advert.id}) }}">Rejeter</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

@@ -6,8 +6,11 @@ use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
+#[Vich\Uploadable]
 class Picture implements TimestampableInterface
 {
     use TimestampableTrait;
@@ -22,6 +25,11 @@ class Picture implements TimestampableInterface
     #[ORM\ManyToOne(inversedBy: 'pictures')]
     #[ORM\JoinColumn(onDelete:"cascade")]
     private ?Advert $advert = null;
+
+    
+    #[Vich\UploadableField(mapping : 'adverts', fileNameProperty : 'path')]
+    private ?File $file = null;
+
 
     public function getId(): ?int
     {
@@ -51,4 +59,17 @@ class Picture implements TimestampableInterface
 
         return $this;
     }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
 }

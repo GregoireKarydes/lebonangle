@@ -15,21 +15,25 @@
                 <th>Email</th>
                 <th>Prix</th>
                 <th>Category</th>
+                <th>Photos</th>
                 <th>Etat</th>
+                <th>Publié le</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for advert in adverts %}
+        {% for advert in pager %}
             <tr>
                 <td>{{ advert.id }}</td>
                 <td>{{ advert.title }}</td>
-                <td>{{ advert.content }}</td>
+                <td>{{ advert.content|length > 50 ? advert.content|slice(0, 50) ~ '...' : advert.content  }}</td>
                 <td>{{ advert.author }}</td>
                 <td>{{ advert.email }}</td>
                 <td>{{ advert.price }}</td>
                 <td>{{ advert.category }}</td>
+                <td>{{ advert.pictures | length }}</td>
                 <td>{{ advert.state }}</td>
+                <td>{{ advert.publishedAt ?  advert.publishedAt| date('d-m-Y') : 'Non publié' }}</td>
                 <td>
                     <a href="{{ path('app_advert_show', {'id': advert.id}) }}">Détails</a>
                     {% if workflow_can(advert,'publish') %}
@@ -54,4 +58,5 @@
     </table>
 
     <a class="btn btn-warning" href="{{ path('app_advert_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+    {{pagerfanta(pager)}}
 {% endblock %}

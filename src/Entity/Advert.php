@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 
+
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
 class Advert implements TimestampableInterface
 {
@@ -40,6 +41,7 @@ class Advert implements TimestampableInterface
     #[ORM\Column(length: 255)]
     private ?string $author = null;
 
+    #[Assert\Email]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
@@ -59,7 +61,7 @@ class Advert implements TimestampableInterface
     #[ORM\Column(length: 255)]
     private string $state = 'draft';
 
-    #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Picture::class)]
+    #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Picture::class, cascade:['persist'])]
     private Collection $pictures;
 
     #[ORM\Column(nullable: true)]

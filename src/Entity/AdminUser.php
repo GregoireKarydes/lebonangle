@@ -32,7 +32,7 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
     private ?string $password = null;
 
     #[Assert\Length(min:5)]
-    // #[Assert\NotCompromisedPassword()]
+    #[Assert\NotCompromisedPassword()]
     private ?string $plainPassword =null;
 
 

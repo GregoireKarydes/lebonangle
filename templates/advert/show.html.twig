@@ -39,12 +39,23 @@
                 <th>State</th>
                 <td>{{ advert.state }}</td>
             </tr>
+             <tr>
+                <th>Published at</th>
+                <td>{{ advert.publishedAt ?  advert.publishedAt| date('d-m-Y') : 'Non publié' }}</td>
+            </tr>
         </tbody>
     </table>
 
+    {% for image in advert.pictures %}
+    <div>
+        <img src="{{ vich_uploader_asset(image, 'file') }}" alt="{{advert.title}}">
+       {# <img  src="{{asset('images/adverts/')}}{{image.path}}" alt="Img not found" /> #}
+    </div>
+{% endfor %}
+
     <a href="{{ path('app_advert_index') }}">back to list</a>
 
-    <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a>
+    {# <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a> #}
 
-    {{ include('advert/_delete_form.html.twig') }}
+    {# {{ include('advert/_delete_form.html.twig') }} #}
 {% endblock %}

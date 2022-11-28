@@ -13,12 +13,12 @@ class AdvertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', null,['attr' => ['class' => 'form-control']])
-            ->add('content', null,['attr' => ['class' => 'form-control']])
-            ->add('author', null,['attr' => ['class' => 'form-control']])
-            ->add('email', null,['attr' => ['class' => 'form-control']])
-            ->add('price', null,['attr' => ['class' => 'form-control']])
-            ->add('category', null,['attr' => ['class' => 'form-control']])
+            ->add('title', null,['attr' => ['class' => 'form-control'], 'label' => 'Titre'])
+            ->add('content', null,['attr' => ['class' => 'form-control'], 'label' => 'Description'])
+            ->add('author', null,['attr' => ['class' => 'form-control'],'label' => 'Auteur'])
+            ->add('email', null,['attr' => ['class' => 'form-control'],'label' => 'Email'])
+            ->add('price', null,['attr' => ['class' => 'form-control'], 'label' => 'Prix'])
+            ->add('category', null,['attr' => ['class' => 'form-control'], 'label' => 'Catégorie'])
             ->add('pictures', CollectionType::class, [
                 'entry_type' => PictureType::class,
                 'entry_options' => ['label' => false],

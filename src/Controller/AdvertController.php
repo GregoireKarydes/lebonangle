@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Advert;
 use App\Entity\Picture;
+use App\Event\AdvertCreatedEvent;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
 use DateTimeImmutable;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 #[Route('/admin/adverts')]
 class AdvertController extends AbstractController
@@ -33,7 +35,7 @@ class AdvertController extends AbstractController
     
 
     #[Route('/new', name: 'app_advert_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AdvertRepository $advertRepository): Response
+    public function new(Request $request, AdvertRepository $advertRepository, EventDispatcherInterface $dispatcher): Response
     {
         $advert = new Advert();
         // $advert->addPicture(new Picture());
@@ -45,6 +47,8 @@ class AdvertController extends AbstractController
 
             return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
         }
+
+        $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
 
         return $this->renderForm('advert/new.html.twig', [
             'advert' => $advert,
@@ -81,31 +85,31 @@ class AdvertController extends AbstractController
         ]);
     }
 
-    // #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
-    // public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
-    // {
-    //     $form = $this->createForm(AdvertType::class, $advert);
-    //     $form->handleRequest($request);
+    #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
+    {
+        $form = $this->createForm(AdvertType::class, $advert);
+        $form->handleRequest($request);
 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $advertRepository->save($advert, true);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $advertRepository->save($advert, true);
 
-    //         return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-    //     }
+            return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+        }
 
-    //     return $this->renderForm('advert/edit.html.twig', [
-    //         'advert' => $advert,
-    //         'form' => $form,
-    //     ]);
-    // }
+        return $this->renderForm('advert/edit.html.twig', [
+            'advert' => $advert,
+            'form' => $form,
+        ]);
+    }
 
-    // #[Route('/{id}', name: 'app_advert_delete', methods: ['POST'])]
-    // public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
-    // {
-    //     if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
-    //         $advertRepository->remove($advert, true);
-    //     }
+    #[Route('/{id}', name: 'app_advert_delete', methods: ['POST'])]
+    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
+            $advertRepository->remove($advert, true);
+        }
 
-    //     return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-    // }
+        return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

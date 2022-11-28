@@ -22,9 +22,9 @@
         </tbody>
     </table>
 
-    <a class="btn btn-danger" href="{{ path('app_admin_user_index') }}">Retour</a>
+    <a class="btn btn-secondary" href="{{ path('app_admin_user_index') }}">Retour</a>
 
-    <a class="btn btn-warning" href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">Modifier</a>
+    <a class="btn btn-secondary" href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">Modifier</a>
 
     {{ include('admin_user/_delete_form.html.twig') }}
 {% endblock %}

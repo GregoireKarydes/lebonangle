@@ -22,7 +22,7 @@
                 <td>{{ category.adverts | length }}</td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('app_category_show', {'id': category.id}) }}">Détails</a>
-                    <a class="btn btn-warning" href="{{ path('app_category_edit', {'id': category.id}) }}">Modifier</a>
+                    <a class="btn btn-secondary" href="{{ path('app_category_edit', {'id': category.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}

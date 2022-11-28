@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Advert{% endblock %}
+{% block title %}Annonce{% endblock %}
 
 {% block body %}
-    <h1>Advert</h1>
+    <h1>Annonce</h1>
 
     <table class="table">
         <tbody>
@@ -12,15 +12,15 @@
                 <td>{{ advert.id }}</td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <td>{{ advert.title }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th>Description</th>
                 <td>{{ advert.content }}</td>
             </tr>
             <tr>
-                <th>Author</th>
+                <th>Auteur</th>
                 <td>{{ advert.author }}</td>
             </tr>
             <tr>
@@ -28,19 +28,19 @@
                 <td>{{ advert.email }}</td>
             </tr>
              <tr>
-                <th>Category</th>
+                <th>Catégorie</th>
                 <td>{{ advert.category }}</td>
             </tr>
             <tr>
-                <th>Price</th>
+                <th>Prix</th>
                 <td>{{ advert.price }}</td>
             </tr>
             <tr>
-                <th>State</th>
+                <th>Status</th>
                 <td>{{ advert.state }}</td>
             </tr>
              <tr>
-                <th>Published at</th>
+                <th>Date de publication</th>
                 <td>{{ advert.publishedAt ?  advert.publishedAt| date('d-m-Y') : 'Non publié' }}</td>
             </tr>
         </tbody>
@@ -53,7 +53,7 @@
     </div>
 {% endfor %}
 
-    <a href="{{ path('app_advert_index') }}">back to list</a>
+    <a class="btn btn-danger" href="{{ path('app_advert_index') }}">Retour</a>
 
     {# <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a> #}
 

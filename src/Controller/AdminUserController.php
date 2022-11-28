@@ -10,16 +10,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 
 #[Route('/admin/admin-user')]
 class AdminUserController extends  AbstractController
 {
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
-    public function index(AdminUserRepository $adminUserRepository): Response
+    public function index(AdminUserRepository $adminUserRepository, Request $request): Response
     {
-        return $this->render('admin_user/index.html.twig', [
-            'admin_users' => $adminUserRepository->findAll(),
-        ]);
+        $queryBuilder = $adminUserRepository->createQueryBuilder('admin_user');
+        $pager = new Pagerfanta(new QueryAdapter($queryBuilder));
+        $pager->setMaxPerPage(30);
+        $pager->setCurrentPage($request->get('page', 1));
+        return $this->render('admin_user/index.html.twig', ['pager'=>$pager]);
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]

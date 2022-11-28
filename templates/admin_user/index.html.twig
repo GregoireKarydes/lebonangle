@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}AdminUser index{% endblock %}
+{% block title %}Liste des admins{% endblock %}
 
 {% block body %}
-    <h1>AdminUser index</h1>
+    <h1>Liste des admins</h1>
 
     <table class="table">
         <thead>
@@ -15,14 +15,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for admin_user in admin_users %}
+        {% for admin_user in pager %}
             <tr>
                 <td>{{ admin_user.id }}</td>
                 <td>{{ admin_user.username }}</td>
                 <td>{{ admin_user.email }}</td>
                 <td>
-                    <a href="{{ path('app_admin_user_show', {'id': admin_user.id}) }}">show</a>
-                    <a href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">edit</a>
+                    <a class="btn btn-primary" href="{{ path('app_admin_user_show', {'id': admin_user.id}) }}">Détails</a>
+                    <a class="btn btn-warning" href="{{ path('app_admin_user_edit', {'id': admin_user.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -33,5 +33,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_admin_user_new') }}">Create new</a>
+    <a class="btn btn-primary mb-3" href="{{ path('app_admin_user_new') }}">Ajouter un nouvel admin</a>
+    {{pagerfanta(pager, 'twitter_bootstrap5')}}
 {% endblock %}

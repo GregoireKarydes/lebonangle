@@ -21,6 +21,7 @@
 	</head>
 	<body>
 		{# NAVBAR #}
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="{{ path('app_advert_index')}}">
@@ -28,20 +29,24 @@
 					LeBonAngle
 				</a>
 				<div class="collapse navbar-collapse" id="navbarNav">
-					<ul class="navbar-nav">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
 							<a class="nav-link active" aria-current="page" href="{{ path('app_advert_index')}}">Annonces</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_category_index') }}">Category</a>
+							<a class="nav-link" href="{{ path('app_category_index') }}">Categories</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_admin_user_index') }}">Admin Users</a>
+							<a class="nav-link" href="{{ path('app_admin_user_index') }}">Administration des utilisateurs</a>
 						</li>
 					</ul>
+					<span class="navbar-text btn btn-warning">
+							<a class="nav-link btn btn-warning float-right" href="{{ path('app_logout') }}"><i class="bi bi-box-arrow-left"></i></a>
+					</span>
 				</div>
 			</div>
 		</nav>
+		{% endif %}
         
 
 		{# CONTENT #}

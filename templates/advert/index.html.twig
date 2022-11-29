@@ -51,12 +51,12 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucune annonce</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a class="btn btn-warning" href="{{ path('app_advert_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a>
+    {# <a class="btn btn-warning" href="{{ path('app_advert_new') }}"><i class="bi bi-plus-square"></i> Déposer une annonce</a> #}
     {{pagerfanta(pager, 'twitter_bootstrap5')}}
 {% endblock %}

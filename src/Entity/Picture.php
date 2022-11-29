@@ -8,9 +8,17 @@ use Knp\DoctrineBehaviors\Contract\Entity\TimestampableInterface;
 use Knp\DoctrineBehaviors\Model\Timestampable\TimestampableTrait;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
+#[ApiResource]
 #[Vich\Uploadable]
+#[Get]
+#[GetCollection]
+#[Post]
 class Picture implements TimestampableInterface
 {
     use TimestampableTrait;

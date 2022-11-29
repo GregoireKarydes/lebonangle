@@ -2,5 +2,4 @@ framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
         envelope:
-            sender: 'notifications@lebonangle.com'
-            recipients: ['gregoire.karydes@gmail.com']
+            sender: 'notifications@example.com'

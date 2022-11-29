@@ -36,8 +36,15 @@ class AdvertSubscriber implements EventSubscriberInterface {
         }
 
         // $recipient = new Recipient(...$arrayOfEmails);
-        $recipient = new Recipient('gregoire.karydes@gmail.com');
-        $this->notifier->send($notification, $recipient);
+        $recipient = new Recipient('admin@example.com');
+        try {
+            $this->notifier->send($notification, $recipient);
+            echo "<h1>Mail sent</h1>";
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+            echo "<h1>$th</h1>";
+        }
 
     }
 

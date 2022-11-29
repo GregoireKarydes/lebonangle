@@ -41,14 +41,14 @@ class AdvertController extends AbstractController
         // $advert->addPicture(new Picture());
         $form = $this->createForm(AdvertType::class, $advert);
         $form->handleRequest($request);
-
+        
+        $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
         if ($form->isSubmitted() && $form->isValid()) {
             $advertRepository->save($advert, true);
-
+            
             return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
 
         return $this->renderForm('advert/new.html.twig', [
             'advert' => $advert,

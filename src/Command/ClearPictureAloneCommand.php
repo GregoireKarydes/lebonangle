@@ -57,7 +57,7 @@ class ClearPictureAloneCommand extends Command
     
             $this->manager->flush();
     
-            $io->success('The rejected pictures are correctly deleted ');
+            $io->success('The pictures not linked are correctly deleted ');
     
             return Command::SUCCESS;
         }

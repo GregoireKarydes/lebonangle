@@ -3,14 +3,15 @@
 namespace App\EventSubscriber;
 use App\Event\AdvertCreatedEvent;
 use App\Repository\AdminUserRepository;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Notifier\Notification\Notification;
-use Symfony\Component\Notifier\NotifierInterface;
-use Symfony\Component\Notifier\Recipient\Recipient;
 
-class AdvertSubscriber implements EventSubscriberInterface {
 
-    public function __construct(private readonly NotifierInterface $notifier, private readonly AdminUserRepository $adminUserRepository)
+class AdvertSubscriber implements EventSubscriberInterface{
+
+    public function __construct(private  MailerInterface $mailer, private readonly AdminUserRepository $adminUserRepository)
     {
         
     }
@@ -24,29 +25,24 @@ class AdvertSubscriber implements EventSubscriberInterface {
 
     public function sendNotificationToAdmin(AdvertCreatedEvent $event) 
     {
-        $notification = new Notification();
-        $notification
-        ->subject('Nouvelle annonce crée')
-        ->content('Une nouvelle annonce a été crée');
-
+        $advert = $event->getAdvert();
+        $baseUrl = $_SERVER['SERVER_NAME'];
         $allAdmins = $this->adminUserRepository->findAll();
-        $arrayOfEmails = [];
         foreach ($allAdmins as $admin){
-             array_push($arrayOfEmails, $admin->getEmail());
+             $recipient = $admin->getEmail();
+             $notification = new NotificationEmail();
+             $notification->to($recipient)
+             ->subject('Une nouvelle annonce a été crée')
+             ->context(['admin'=>$admin, 'url'=>$baseUrl, 'advertId'=>$advert->getId()])
+             ->htmlTemplate('/email/advert-created.html.twig');
+            
+             $this->mailer->send($notification);
         }
-
-        // $recipient = new Recipient(...$arrayOfEmails);
-        $recipient = new Recipient('admin@example.com');
-        try {
-            $this->notifier->send($notification, $recipient);
-            echo "<h1>Mail sent</h1>";
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-            echo "<h1>$th</h1>";
-        }
-
     }
+
+   
+
+
 
 
 } 

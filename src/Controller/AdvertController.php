@@ -3,12 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Advert;
-use App\Entity\Picture;
-use App\Event\AdvertCreatedEvent;
 use App\Form\AdvertType;
 use App\Repository\AdvertRepository;
 use DateTimeImmutable;
-use Doctrine\DBAL\Types\DateImmutableType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
+use App\Event\AdvertCreatedEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 
 #[Route('/admin/adverts')]
 class AdvertController extends AbstractController
@@ -35,17 +34,16 @@ class AdvertController extends AbstractController
     
 
     #[Route('/new', name: 'app_advert_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AdvertRepository $advertRepository, EventDispatcherInterface $dispatcher): Response
+    public function new(Request $request, AdvertRepository $advertRepository,EventDispatcherInterface $dispatcher ): Response
     {
         $advert = new Advert();
         // $advert->addPicture(new Picture());
         $form = $this->createForm(AdvertType::class, $advert);
         $form->handleRequest($request);
-        
-        $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
+        // mail also sent in prePersist to alert admin
         if ($form->isSubmitted() && $form->isValid()) {
             $advertRepository->save($advert, true);
-            
+            $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
             return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
         }
 

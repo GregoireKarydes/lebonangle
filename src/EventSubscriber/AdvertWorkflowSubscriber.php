@@ -25,16 +25,12 @@ class AdvertWorkflowSubscriber implements EventSubscriberInterface {
 
     public function notifyAuthor(Event $event) : void {
         $advert = $event->getSubject();
-        $notification = (new Notification())->subject('Votre annonce')->content('Votre annonce vient est maintenant publiée sur LeBonAngle');
+        $notification = (new Notification())
+        ->subject('Votre annonce')
+        ->content('Votre annonce vient est maintenant publiée sur LeBonAngle')
+        ;
 
         $recipient = new Recipient($advert->getEmail());
-        try {
-            $this->notifier->send($notification, $recipient);
-            echo "<h1>Mail sent to".$advert->getEmail()."</h1>";
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-            echo "<h1>$th</h1>";
-        }
+        $this->notifier->send($notification, $recipient);
     }
 }

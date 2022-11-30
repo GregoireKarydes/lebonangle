@@ -1,0 +1,12 @@
+{# templates/bundles/AcmeUserBundle/registration/confirmed.html.twig #}
+{# the special '!' prefix avoids errors when extending from an overridden template #}
+{# {% extends "@!symfony\twig-bridge\Resources\views\Email\default\notification\body.html.twig" %} #}
+
+{% block some_block %}
+    <p><b>Bonjour {{admin.username}},<b></p>
+    <p>Une nouvelle annonce a été postée depuis l'API </p>
+    <p>Que voulez-vous faire ? <p>
+    <a target="_blank" href="http://{{url}}/admin/adverts/{{advertId}}"><button>Voir l'annonce</button></a>
+    <a target="_blank" href="http://{{url}}/admin/adverts/publish/{{advertId}}"><button>Publier l'annonce</button></a>
+    <a target="_blank" href="http://{{url}}/admin/adverts/unpublish/{{advertId}}"><button>Rejeter l'annonce</button></a>
+{% endblock %}

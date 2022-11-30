@@ -9,6 +9,9 @@ class AdvertCreatedEvent {
     public const NAME ='advert.created';
 
     public function __construct(private readonly Advert $advert) {
+    }
 
+    public function getAdvert() {
+        return $this->advert;
     }
 }

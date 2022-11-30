@@ -10,6 +10,14 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
   class LoginController extends AbstractController
   {
       #[Route('/login', name: 'app_login')]
+  /**
+   * The index function is called when the user visits the login page
+   * 
+   * @param AuthenticationUtils authenticationUtils This is a service that Symfony provides to help you
+   * get information about the user's login attempt.
+   * 
+   * @return Response The last username entered by the user and the error if there is one.
+   */
      public function index(AuthenticationUtils $authenticationUtils): Response
       {
          // get the login error if there is one

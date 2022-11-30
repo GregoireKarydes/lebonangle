@@ -22,6 +22,15 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class AdvertController extends AbstractController
 {
 
+/**
+ * It creates a query builder, creates a pagerfanta object, sets the number of results per page, and
+ * sets the current page
+ * 
+ * @param AdvertRepository advertRepository the repository class for the Advert entity
+ * @param Request request The current request.
+ * 
+ * @return Response A Response object
+ */
     #[Route('/', name: 'app_advert_index', methods: ['GET'])]
     public function index(AdvertRepository $advertRepository, Request $request): Response
     {
@@ -33,29 +42,19 @@ class AdvertController extends AbstractController
     }
     
 
-    #[Route('/new', name: 'app_advert_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AdvertRepository $advertRepository,EventDispatcherInterface $dispatcher ): Response
-    {
-        $advert = new Advert();
-        // $advert->addPicture(new Picture());
-        $form = $this->createForm(AdvertType::class, $advert);
-        $form->handleRequest($request);
-        // mail also sent in prePersist to alert admin
-        if ($form->isSubmitted() && $form->isValid()) {
-            $advertRepository->save($advert, true);
-            $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
-            return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-        }
 
-
-        return $this->renderForm('advert/new.html.twig', [
-            'advert' => $advert,
-            'form' => $form,
-        ]);
-    }
-
+/**
+ * It applies the publish transition to the advert object
+ * 
+ * @param Advert advert The advert object to apply the transition to.
+ * @param WorkflowInterface advertPublishingStateMachine The workflow service.
+ * @param AdvertRepository advertRepository The repository used to persist the advert object.
+ * 
+ * @return RedirectResponse A RedirectResponse object.
+ */
     #[Route('/publish/{id}', name: 'app_advert_publish',methods: ['GET', 'POST'])]
     public function publish(Advert $advert, WorkflowInterface $advertPublishingStateMachine, AdvertRepository $advertRepository) : RedirectResponse {
+        /* It applies the publish transition to the advert object. */
         $advertPublishingStateMachine->apply($advert, 'publish');
         $now = new DateTimeImmutable();
         $advert->setPublishedAt($now);
@@ -63,6 +62,17 @@ class AdvertController extends AbstractController
         return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
     }
 
+ /**
+  * It checks if the advert can be rejected or unpublished, and if so, it applies the appropriate
+  * transition
+  * 
+  * @param Advert advert The advert object that we want to unpublish.
+  * @param WorkflowInterface advertPublishingStateMachine This is the service that we created in the
+  * previous step.
+  * @param AdvertRepository advertRepository The repository for the Advert entity.
+  * 
+  * @return RedirectResponse A RedirectResponse object.
+  */
     #[Route('/unpublish/{id}', name: 'app_advert_unpublish', methods: ['GET', 'POST'])]
     public function unpublish(Advert $advert, WorkflowInterface $advertPublishingStateMachine,  AdvertRepository $advertRepository) : RedirectResponse {
         if($advertPublishingStateMachine->can($advert, 'reject')) {
@@ -75,6 +85,13 @@ class AdvertController extends AbstractController
         return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
     }
 
+  /**
+   * It takes an advert object as an argument, and returns a response object
+   * 
+   * @param Advert advert The advert object that will be passed to the template.
+   * 
+   * @return Response A Response object
+   */
     #[Route('/{id}', name: 'app_advert_show', methods: ['GET'])]
     public function show(Advert $advert): Response
     {
@@ -83,31 +100,4 @@ class AdvertController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_advert_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
-    {
-        $form = $this->createForm(AdvertType::class, $advert);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $advertRepository->save($advert, true);
-
-            return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('advert/edit.html.twig', [
-            'advert' => $advert,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_advert_delete', methods: ['POST'])]
-    public function delete(Request $request, Advert $advert, AdvertRepository $advertRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
-            $advertRepository->remove($advert, true);
-        }
-
-        return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

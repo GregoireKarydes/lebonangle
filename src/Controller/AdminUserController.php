@@ -16,6 +16,15 @@ use Pagerfanta\Pagerfanta;
 #[Route('/admin/admin-user')]
 class AdminUserController extends  AbstractController
 {
+  /**
+   * It creates a query builder, creates a pagerfanta object, sets the max per page, sets the current
+   * page, and renders the template
+   * 
+   * @param AdminUserRepository adminUserRepository The repository class for the AdminUser entity.
+   * @param Request request The request object.
+   * 
+   * @return Response A Response object.
+   */
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(AdminUserRepository $adminUserRepository, Request $request): Response
     {
@@ -26,6 +35,14 @@ class AdminUserController extends  AbstractController
         return $this->render('admin_user/index.html.twig', ['pager'=>$pager]);
     }
 
+ /**
+  * > This function creates a new admin user and saves it to the database
+  * 
+  * @param Request request The request object
+  * @param AdminUserRepository adminUserRepository The repository for the AdminUser entity.
+  * 
+  * @return Response A Response object.
+  */
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, AdminUserRepository $adminUserRepository): Response
     {
@@ -44,6 +61,15 @@ class AdminUserController extends  AbstractController
         ]);
     }
 
+/**
+ * > This function renders the `show.html.twig` template, passing the `admin_user` variable to the
+ * template
+ * 
+ * @param AdminUser adminUser This is the variable that will be used in the template to access the
+ * user.
+ * 
+ * @return Response A response object.
+ */
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
     public function show(AdminUser $adminUser): Response
     {
@@ -52,6 +78,15 @@ class AdminUserController extends  AbstractController
         ]);
     }
 
+/**
+ * It renders a form to edit an admin user
+ * 
+ * @param Request request The request object
+ * @param AdminUser adminUser The entity that will be edited.
+ * @param AdminUserRepository adminUserRepository The repository for the AdminUser entity.
+ * 
+ * @return Response A Response object.
+ */
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, AdminUser $adminUser, AdminUserRepository $adminUserRepository): Response
     {
@@ -70,6 +105,20 @@ class AdminUserController extends  AbstractController
         ]);
     }
 
+/**
+ * - We check if the user is trying to delete his own account, if so, we redirect him to the index page
+ * with an error message.
+ * - We check if the user is trying to delete the last admin account, if so, we redirect him to the
+ * index page with an error message.
+ * - If the user is trying to delete a valid account, we delete it
+ * 
+ * @param Request request The request object.
+ * @param AdminUser adminUser The adminUser object that is passed to the controller.
+ * @param AdminUserRepository adminUserRepository The repository for the AdminUser entity.
+ * @param Security security
+ * 
+ * @return Response A Response object
+ */
     #[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
     public function delete(Request $request, AdminUser $adminUser, AdminUserRepository $adminUserRepository, Security $security): Response
     {

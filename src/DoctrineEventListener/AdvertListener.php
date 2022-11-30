@@ -2,7 +2,6 @@
 
 namespace App\DoctrineEventListener;
 
-use App\Entity\Advert;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Event\AdvertCreatedEvent;
@@ -19,9 +18,6 @@ class AdvertListener {
 
     public function postPersist(LifecycleEventArgs $event) : void {
         $advert = $event->getObject();
-        if(!$advert instanceof Advert) {
-            return;
-        }
         //  send mail
         $this->dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
     }

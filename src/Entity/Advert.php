@@ -18,6 +18,7 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
@@ -100,6 +101,12 @@ class Advert implements TimestampableInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+         $this->id = $id;
+         return $this;
     }
 
     public function getTitle(): ?string

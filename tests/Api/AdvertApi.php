@@ -27,5 +27,42 @@ class AdvertApi extends ApiTestCase {
         $this->assertMatchesRegularExpression('~^/adverts/\d+$~', $response->toArray()['@id']);
         $this->assertMatchesResourceItemJsonSchema(Advert::class);
     }
+
+    public function testInvalidCreateAdvert() : void {
+        $response = self::createClient()->request('POST', '/adverts', ['json' =>[
+            'title' => 'string',
+            'content' => 'string',
+            'author' => 'string',
+            'email' => 'user@example.com',
+            'category' => '/adverts/2',
+            'price' => 'string',
+            'pictures' => []
+            ]]);
+        self::assertResponseStatusCodeSame(400);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+    }
+
+    public function testInvalidGetById() : void {
+        $response = self::createClient()->request('GET', '/adverts/toto');
+        self::assertResponseStatusCodeSame(404);
+        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
+    }
+
+    
+    public function testNotDefineDeleteItem() : void {
+        self::createClient()->request('DELETE', '/adverts/toto');
+        self::assertResponseStatusCodeSame(405);
+    }
+
+    public function testNotPatchItem() : void {
+        self::createClient()->request('PATCH', '/adverts/toto');
+        self::assertResponseStatusCodeSame(405);
+    }
+
+    public function testNotPutItem() : void {
+        self::createClient()->request('PUT', '/adverts/toto');
+        self::assertResponseStatusCodeSame(405);
+    }
+
 }
 

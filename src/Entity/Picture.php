@@ -13,14 +13,41 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Metadata\ApiProperty;
+use App\Controller\CreatePictureAction;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
 #[Vich\Uploadable]
 #[ApiResource(
+    normalizationContext: ['groups' => ['adverts:read']], 
+    types: ['https://schema.org/MediaObject'],
     operations: [
         new Get(),
         new GetCollection(),
-        new Post(denormalizationContext: ['groups' => ['create']])
+        new Post(
+            controller: CreatePictureAction::class, 
+            deserialize: false, 
+            validationContext: ['groups' => ['Default', 'adverts_create']], 
+            openapiContext: [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object', 
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string', 
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        )
     ]
 )]
 class Picture implements TimestampableInterface
@@ -31,6 +58,8 @@ class Picture implements TimestampableInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ApiProperty(types: ['https://schema.org/contentUrl'])]
+    #[Groups(['adverts:read'])]
     #[ORM\Column(length: 255)]
     private ?string $path = null;
 
@@ -38,8 +67,8 @@ class Picture implements TimestampableInterface
     #[ORM\JoinColumn(onDelete:"cascade")]
     private ?Advert $advert = null;
 
-    #[Groups(['create'])]
     #[Vich\UploadableField(mapping : 'adverts', fileNameProperty : 'path')]
+    #[Assert\NotNull(groups: ['adverts_create'])]
     private ?File $file = null;
 
 

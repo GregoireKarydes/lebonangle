@@ -33,6 +33,7 @@ class AdvertSubscriber implements EventSubscriberInterface{
    */
     public function sendNotificationToAdmin(AdvertCreatedEvent $event) 
     {
+        if(!isset($_SERVER['SERVER_NAME'])) return; //avoid useless error during test
         $advert = $event->getAdvert();
         $baseUrl = $_SERVER['SERVER_NAME'];
         $allAdmins = $this->adminUserRepository->findAll();

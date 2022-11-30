@@ -11,7 +11,7 @@ class AdminUserControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private AdminUserRepository $repository;
-    private string $path = '/admin/user/';
+    private string $path = '/admin/admin-user/';
 
     protected function setUp(): void
     {

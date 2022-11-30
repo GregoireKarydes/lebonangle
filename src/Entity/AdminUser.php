@@ -88,15 +88,6 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
     }
 	/**
 	 * Returns the roles granted to the user.
-	 *
-	 * public function getRoles()
-	 * {
-	 * return ['ROLE_USER'];
-	 * }
-	 *
-	 * Alternatively, the roles might be stored in a ``roles`` property,
-	 * and populated in any number of different ways when the user object
-	 * is created.
 	 * @return array<string>
 	 */
 	public function getRoles(): array {
@@ -106,9 +97,6 @@ class AdminUser implements TimestampableInterface, UserInterface, PasswordAuthen
 	
 	/**
 	 * Removes sensitive data from the user.
-	 *
-	 * This is important if, at any given point, sensitive information like
-	 * the plain-text password is stored on this object.
 	 * @return mixed
 	 */
 	public function eraseCredentials() {

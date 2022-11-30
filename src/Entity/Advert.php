@@ -18,12 +18,16 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AdvertRepository::class)]
-#[ApiResource]
-#[Get]
-#[GetCollection]
-#[Post]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(denormalizationContext: ['groups' => ['create']])
+    ]
+)]
 #[ApiFilter(RangeFilter::class, properties: ['price'])]
 #[ApiFilter(OrderFilter::class, properties: ['publishedAt', 'price'], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(SearchFilter::class, properties: ['category' => 'exact'])]
@@ -36,6 +40,7 @@ class Advert implements TimestampableInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['create'])]
     #[ORM\Column(length: 100)]
     #[Assert\Length(
         min: 2,
@@ -49,20 +54,25 @@ class Advert implements TimestampableInterface
         max: 1200,
         maxMessage: 'Votre contenu doit faire au maximum {{ limit }} caractères de long.',
     )]
+    #[Groups(['create'])]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[Groups(['create'])]
     #[ORM\Column(length: 255)]
     private ?string $author = null;
 
+    #[Groups(['create'])]
     #[Assert\Email]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Groups(['create'])]
     #[ORM\ManyToOne(inversedBy: 'adverts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[Groups(['create'])]
     #[ORM\Column]
     #[Assert\GreaterThanOrEqual(
         value: 1,
@@ -75,6 +85,7 @@ class Advert implements TimestampableInterface
     #[ORM\Column(length: 255)]
     private string $state = 'draft';
 
+    #[Groups(['create'])]
     #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Picture::class, cascade:['persist'])]
     private Collection $pictures;
 

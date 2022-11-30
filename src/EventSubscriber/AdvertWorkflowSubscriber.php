@@ -8,6 +8,8 @@ use Symfony\Component\Notifier\NotifierInterface;
 use Symfony\Component\Notifier\Recipient\Recipient;
 use Symfony\Component\Workflow\Event\Event;
 
+/* It's a subscriber to the event 'workflow.advert_publishing.transition.publish' and when this event
+is triggered, it calls the notifyAuthor method */
 class AdvertWorkflowSubscriber implements EventSubscriberInterface {
     
 
@@ -23,6 +25,11 @@ class AdvertWorkflowSubscriber implements EventSubscriberInterface {
         ];
     }
 
+  /**
+   * It sends a notification to the author of an ad when it's published.
+   * 
+   * @param Event event The event object
+   */
     public function notifyAuthor(Event $event) : void {
         $advert = $event->getSubject();
         $notification = (new Notification())

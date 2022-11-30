@@ -12,13 +12,17 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PictureRepository::class)]
-#[ApiResource]
 #[Vich\Uploadable]
-#[Get]
-#[GetCollection]
-#[Post]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(denormalizationContext: ['groups' => ['create']])
+    ]
+)]
 class Picture implements TimestampableInterface
 {
     use TimestampableTrait;
@@ -34,7 +38,7 @@ class Picture implements TimestampableInterface
     #[ORM\JoinColumn(onDelete:"cascade")]
     private ?Advert $advert = null;
 
-    
+    #[Groups(['create'])]
     #[Vich\UploadableField(mapping : 'adverts', fileNameProperty : 'path')]
     private ?File $file = null;
 

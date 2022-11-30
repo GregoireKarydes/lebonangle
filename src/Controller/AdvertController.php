@@ -59,6 +59,8 @@ class AdvertController extends AbstractController
         $now = new DateTimeImmutable();
         $advert->setPublishedAt($now);
         $advertRepository->save($advert, true);
+        $message = "L'annonce a été publiée";
+        $this->addFlash('success',$message);
         return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -82,6 +84,8 @@ class AdvertController extends AbstractController
             $advertPublishingStateMachine->apply($advert, 'unpublish');
         }
         $advertRepository->save($advert, true);
+        $message = "L'annonce a été rejetée";
+        $this->addFlash('success',$message);
         return $this->redirectToRoute('app_advert_index', [], Response::HTTP_SEE_OTHER);
     }
 

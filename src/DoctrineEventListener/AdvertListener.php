@@ -9,41 +9,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
 
-class AdvertUserListener {
+class AdvertListener {
 
-    public function __construct(private readonly UserPasswordHasherInterface $passwordhasher)
+    public function __construct(private readonly   EventDispatcherInterface $dispatcher)
     {
         
     }
 
-    public function prePersist(LifecycleEventArgs $event,  EventDispatcherInterface $dispatcher) : void {
+    public function postPersist(LifecycleEventArgs $event) : void {
         $advert = $event->getObject();
-/**
- * "When an advert is created, dispatch an event to the event dispatcher."
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is available to all Symfony controllers. 
- * 
- * The event dispatcher is a service that is
- * 
- * @param LifecycleEventArgs event The event object that was triggered.
- * @param EventDispatcherInterface dispatcher The event dispatcher
- */
         //  send mail
-        $dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
+        $this->dispatcher->dispatch(new AdvertCreatedEvent($advert), AdvertCreatedEvent::NAME);
     }
 
 }

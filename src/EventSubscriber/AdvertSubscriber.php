@@ -37,12 +37,11 @@ class AdvertSubscriber implements EventSubscriberInterface{
         $advert = $event->getAdvert();
         $baseUrl = $_SERVER['SERVER_NAME'];
         $allAdmins = $this->adminUserRepository->findAll();
-        $title = $advert->getId();
         foreach ($allAdmins as $admin){
              $recipient = $admin->getEmail();
              $notification = new NotificationEmail();
              $notification->to($recipient)
-             ->subject("Une nouvelle annonce a été crée : $title")
+             ->subject("Une nouvelle annonce a été crée")
              ->context(['admin'=>$admin, 'url'=>$baseUrl, 'advertId'=>$advert->getId()])
              ->htmlTemplate('/email/advert-created.html.twig');
             

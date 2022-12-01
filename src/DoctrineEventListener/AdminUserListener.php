@@ -44,7 +44,7 @@ class AdminUserListener {
  * 
  * @return void The return value is the value that is returned by the function.
  */
-    public function preUpdated(LifecycleEventArgs $event) : void {
+    public function preUpdate(LifecycleEventArgs $event) : void {
         $adminUser = $event->getObject();
         if(!$adminUser instanceof AdminUser) {
             return;

@@ -48,12 +48,12 @@
 
     {% for image in advert.pictures %}
     <div>
-        <img src="{{ vich_uploader_asset(image, 'file') }}" alt="{{advert.title}}">
+        <img src="{{ vich_uploader_asset(image, 'file') }}" alt="{{advert.title}}" class="w-25 mb-2"">
        {# <img  src="{{asset('images/adverts/')}}{{image.path}}" alt="Img not found" /> #}
     </div>
 {% endfor %}
 
-    <a class="btn btn-secondary" href="{{ path('app_advert_index') }}">Retour</a>
+    <a class="btn btn-secondary mt-3" href="{{ path('app_advert_index') }}">Retour</a>
 
     {# <a href="{{ path('app_advert_edit', {'id': advert.id}) }}">edit</a> #}
 

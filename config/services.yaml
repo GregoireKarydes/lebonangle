@@ -23,7 +23,7 @@ services:
     App\DoctrineEventListener\AdminUserListener:
         tags :
             - {name : 'doctrine.event_listener', event : 'prePersist'}
-            - {name : 'doctrine.event_listener', event : 'preUpdated'}
+            - {name : 'doctrine.event_listener', event : 'preUpdate'}
     App\DoctrineEventListener\AdvertListener:
         tags :
             - {name : 'doctrine.event_listener', event : 'postPersist'}
